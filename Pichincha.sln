@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32616.157
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pichincha.Test", "Pichincha.Test\Pichincha.Test.csproj", "{3354D9B3-33B6-441F-BF90-229F0E9C597D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pichincha.Infrastructure", "Pichincha.Infrastructure\Pichincha.Infrastructure.csproj", "{C1BE8912-CC15-4C43-9D63-A10675725458}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pichincha.Domain", "Pichincha.Domain\Pichincha.Domain.csproj", "{BC479691-7274-4BF1-A434-0D0BA596E020}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pichincha.Services", "Pichincha.Services\Pichincha.Services.csproj", "{B03C5ABE-E24C-4CB4-AE6D-7CC857878736}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pichincha.Models", "Pichincha.Models\Pichincha.Models.csproj", "{92F1A3BB-A916-4F2C-83DE-9BF50DE193C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pichincha.Api", "Pichincha.Api\Pichincha.Api.csproj", "{A134B8AE-1873-4A1E-B6F7-E451DDFF907C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3354D9B3-33B6-441F-BF90-229F0E9C597D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3354D9B3-33B6-441F-BF90-229F0E9C597D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3354D9B3-33B6-441F-BF90-229F0E9C597D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3354D9B3-33B6-441F-BF90-229F0E9C597D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1BE8912-CC15-4C43-9D63-A10675725458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1BE8912-CC15-4C43-9D63-A10675725458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1BE8912-CC15-4C43-9D63-A10675725458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1BE8912-CC15-4C43-9D63-A10675725458}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC479691-7274-4BF1-A434-0D0BA596E020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC479691-7274-4BF1-A434-0D0BA596E020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC479691-7274-4BF1-A434-0D0BA596E020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC479691-7274-4BF1-A434-0D0BA596E020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B03C5ABE-E24C-4CB4-AE6D-7CC857878736}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B03C5ABE-E24C-4CB4-AE6D-7CC857878736}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B03C5ABE-E24C-4CB4-AE6D-7CC857878736}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B03C5ABE-E24C-4CB4-AE6D-7CC857878736}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92F1A3BB-A916-4F2C-83DE-9BF50DE193C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92F1A3BB-A916-4F2C-83DE-9BF50DE193C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92F1A3BB-A916-4F2C-83DE-9BF50DE193C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92F1A3BB-A916-4F2C-83DE-9BF50DE193C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A134B8AE-1873-4A1E-B6F7-E451DDFF907C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A134B8AE-1873-4A1E-B6F7-E451DDFF907C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A134B8AE-1873-4A1E-B6F7-E451DDFF907C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A134B8AE-1873-4A1E-B6F7-E451DDFF907C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3696CB8E-EE1B-4EFE-8E3E-0413609F9245}
+	EndGlobalSection
+EndGlobal
