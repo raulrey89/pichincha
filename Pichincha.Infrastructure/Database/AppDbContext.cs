@@ -31,6 +31,21 @@ namespace Pichincha.Infrastructure.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ClienteEntity>()
+                .HasOne(p => p.Persona)
+                .WithMany(b => b.Cliente)
+                .HasForeignKey(p => p.IdPersona);
+
+            modelBuilder.Entity<CuentaEntity>()
+                .HasOne(p => p.Cliente)
+                .WithMany(b => b.Cuentas)
+                .HasForeignKey(p => p.IdCliente);
+
+            modelBuilder.Entity<MovimientoEntity>()
+                .HasOne(p => p.Cuenta)
+                .WithMany(b => b.Movimientos)
+                .HasForeignKey(p => p.IdCuenta);
+
             base.OnModelCreating(modelBuilder);
         }
 

@@ -2,7 +2,7 @@
 
 namespace Pichincha.Domain.Entities
 {
-    public abstract class PersonaEntity : Entity<int>
+    public class PersonaEntity : Entity<int>
     {
         public string Nombre { get; set; } = null!;
         public string? Genero { get; set; }
@@ -10,6 +10,7 @@ namespace Pichincha.Domain.Entities
         public string? Identificacion { get; set; }
         public string Direccion { get; set; } = null!;
         public string Telefono { get; set; } = null!;
+        public List<ClienteEntity> Cliente { get; set; }
 
     }
 }

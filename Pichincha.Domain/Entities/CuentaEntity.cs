@@ -9,6 +9,7 @@ namespace Pichincha.Domain.Entities
             Movimientos = new List<MovimientoEntity>();
         }
         public int Id { get; set; }
+        public int IdCliente { get; set; }
         public string NumeroCuenta { get; set; } = null!;
         public string TipoCuenta { get; set; } = null!;
         public decimal SaldoInicial { get; set; }

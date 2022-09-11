@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Pichincha.Services.Intefaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,6 +9,12 @@ namespace Pichincha.Api.Controllers
     [ApiController]
     public class ClientesController : ControllerBase
     {
+        private readonly IClienteService _clienteService;
+        public ClientesController(IClienteService clienteService)
+        {
+            _clienteService = clienteService;
+        }
+
         // GET: api/<ClientesController>
         [HttpGet]
         public IEnumerable<string> Get()

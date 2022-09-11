@@ -7,6 +7,7 @@ namespace Pichincha.Domain.Entities
         public int IdPersona { get; set; }
         public string Contrasena { get; set; } = null!;
         public bool? Estado { get; set; }
-        public virtual ICollection<CuentaEntity> Cuentas { get; set; }
+        public ICollection<CuentaEntity> Cuentas { get; set; }
+        public  PersonaEntity Persona { get; set; } = null!;
     }
 }
