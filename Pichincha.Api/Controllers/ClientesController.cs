@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Pichincha.Models.DTOs;
+using Pichincha.Models.Request;
 using Pichincha.Services.Intefaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,36 +17,63 @@ namespace Pichincha.Api.Controllers
             _clienteService = clienteService;
         }
 
-        // GET: api/<ClientesController>
+        // GET: api/<ClienteController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<PersonaClienteReadDto>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _clienteService.GetClientes();
+            return result;
         }
 
-        // GET api/<ClientesController>/5
+        // GET api/<ClienteController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            return "value";
+            PersonaClienteReadDto result = await _clienteService.GetClienteById(id);
+            return Ok(result);
         }
 
-        // POST api/<ClientesController>
+        // POST api/<ClienteController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] PersonaCliente Cliente)
         {
+            await _clienteService.AddCliente(Cliente);
+
+            return Ok();
         }
 
-        // PUT api/<ClientesController>/5
+        // PUT api/<ClienteController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task Put(Guid id, [FromBody] ClienteDto Cliente)
         {
+            StatusDto status = new StatusDto();
+            PersonaClienteReadDto result = await _clienteService.GetClienteById(id);
+            if (result is null)
+            {
+                return;
+            }
+
+            await _clienteService.UpdateCliente(id, Cliente);
+
+            return;
         }
 
-        // DELETE api/<ClientesController>/5
+        // DELETE api/<ClienteController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<StatusDto> Delete(Guid id)
         {
+
+            StatusDto status = new StatusDto();
+            PersonaClienteReadDto result = await _clienteService.GetClienteById(id);
+            if (result is null)
+            {
+                status = new StatusDto { IsSuccess = false, Message = $"Cliente {id} is not valid" };
+                return status;
+            }
+
+            status = await _clienteService.RemoveClienteById(id);
+
+            return status;
         }
     }
 }

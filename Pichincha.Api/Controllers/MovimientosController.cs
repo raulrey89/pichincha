@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Pichincha.Models.DTOs;
+using Pichincha.Services.Intefaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +10,69 @@ namespace Pichincha.Api.Controllers
     [ApiController]
     public class MovimientosController : ControllerBase
     {
-        // GET: api/<MovimientosController>
+        private readonly IMovimientoService _MovimientoService;
+        public MovimientosController(IMovimientoService MovimientoService)
+        {
+            _MovimientoService = MovimientoService;
+        }
+
+        // GET: api/<MovimientoController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<MovimientoReadDto>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _MovimientoService.GetMovimientos();
+            return result;
         }
 
-        // GET api/<MovimientosController>/5
+        // GET api/<MovimientoController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            return "value";
+            MovimientoReadDto result = await _MovimientoService.GetMovimientoById(id);
+            return Ok(result);
         }
 
-        // POST api/<MovimientosController>
+        // POST api/<MovimientoController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] MovimientoDto Movimiento)
         {
+            await _MovimientoService.AddMovimiento(Movimiento);
+
+            return Ok();
         }
 
-        // PUT api/<MovimientosController>/5
+        // PUT api/<MovimientoController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task Put(Guid id, [FromBody] MovimientoDto Movimiento)
         {
+            StatusDto status = new StatusDto();
+            MovimientoReadDto result = await _MovimientoService.GetMovimientoById(id);
+            if (result is null)
+            {
+                return;
+            }
+
+            await _MovimientoService.UpdateMovimiento(id, Movimiento);
+
+            return;
         }
 
-        // DELETE api/<MovimientosController>/5
+        // DELETE api/<MovimientoController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<StatusDto> Delete(Guid id)
         {
+
+            StatusDto status = new StatusDto();
+            MovimientoReadDto result = await _MovimientoService.GetMovimientoById(id);
+            if (result is null)
+            {
+                status = new StatusDto { IsSuccess = false, Message = $"Movimiento {id} is not valid" };
+                return status;
+            }
+
+            status = await _MovimientoService.RemoveMovimientoById(id);
+
+            return status;
         }
     }
 }

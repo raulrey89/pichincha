@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Pichincha.Domain.Entities;
+using Pichincha.Models.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pichincha.Domain.Interfaces
 {
-    public class ICuentaRepository
+    public interface ICuentaRepository : IRepository<CuentaEntity, Guid>
     {
-        //Task<IEnumerable<CuentaReadDto>> GetCuenta();
-        //Task<CuentaReadDto> GetCuentaById(int id);
-        //Task AddCuenta(CuentaDto dto);
-        //Task UpdateCuenta(int id, CuentaDto dto);
-        //Task<StatusDto> RemoveCuentaById(int id);
     }
 }

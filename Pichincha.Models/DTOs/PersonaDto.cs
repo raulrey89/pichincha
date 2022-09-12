@@ -1,8 +1,12 @@
-﻿using Pichincha.Domain.Base;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Pichincha.Domain.Entities
+namespace Pichincha.Models.DTOs
 {
-    public class PersonaEntity : Entity<Guid>
+    public class PersonaDto
     {
         public string Nombre { get; set; } = null!;
         public string? Genero { get; set; }
@@ -10,7 +14,5 @@ namespace Pichincha.Domain.Entities
         public string? Identificacion { get; set; }
         public string Direccion { get; set; } = null!;
         public string Telefono { get; set; } = null!;
-        public List<ClienteEntity> Cliente { get; set; }
-
     }
 }

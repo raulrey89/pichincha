@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Intefaces\" />
-    <Folder Include="Implementations\" />
+    <ProjectReference Include="..\Pichincha.Domain\Pichincha.Domain.csproj" />
+    <ProjectReference Include="..\Pichincha.Models\Pichincha.Models.csproj" />
   </ItemGroup>
 
 </Project>

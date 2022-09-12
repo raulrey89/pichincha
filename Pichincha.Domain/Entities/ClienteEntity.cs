@@ -2,9 +2,9 @@
 
 namespace Pichincha.Domain.Entities
 {
-    public class ClienteEntity : Entity<int>
+    public class ClienteEntity : Entity<Guid>
     {
-        public int IdPersona { get; set; }
+        public Guid IdPersona { get; set; }
         public string Contrasena { get; set; } = null!;
         public bool? Estado { get; set; }
         public ICollection<CuentaEntity> Cuentas { get; set; }

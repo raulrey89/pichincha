@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Pichincha.Api.Middleware;
+using Pichincha.Domain.Interfaces;
 using Pichincha.Infrastructure.Database;
+using Pichincha.Infrastructure.Repositories;
 using Pichincha.Services.Implementations;
 using Pichincha.Services.Intefaces;
 
@@ -34,11 +37,17 @@ Console.WriteLine($"Server DB {configuration.GetConnectionString("DefaultConnect
 #region Injection Services
 
 builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<ICuentaService, CuentaService>();
+builder.Services.AddScoped<IMovimientoService, MovimientoService>();
 
 #endregion
 
 #region Injection Repository
 
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<ICuentaRepository, CuentaRepository>();
+builder.Services.AddScoped<IMovimientoRepository, MovimientoRepository>();
+builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
 
 #endregion
 
@@ -50,6 +59,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
 
 app.UseHttpsRedirection();
 

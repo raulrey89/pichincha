@@ -13,8 +13,7 @@ namespace Pichincha.Infrastructure.Migrations
                 name: "Persona",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Genero = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Edad = table.Column<int>(type: "int", nullable: true),
@@ -33,9 +32,8 @@ namespace Pichincha.Infrastructure.Migrations
                 name: "Cliente",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdPersona = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdPersona = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Contrasena = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: true),
                     FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -56,9 +54,8 @@ namespace Pichincha.Infrastructure.Migrations
                 name: "Cuenta",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdCliente = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdCliente = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     NumeroCuenta = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TipoCuenta = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SaldoInicial = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -81,10 +78,8 @@ namespace Pichincha.Infrastructure.Migrations
                 name: "Movimiento",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    IdCuenta = table.Column<int>(type: "int", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IdCuenta = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TipoMovimiento = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Valor = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Saldo = table.Column<decimal>(type: "decimal(18,2)", nullable: false),

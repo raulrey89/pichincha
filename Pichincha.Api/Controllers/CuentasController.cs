@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Pichincha.Models.DTOs;
+using Pichincha.Services.Intefaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +10,69 @@ namespace Pichincha.Api.Controllers
     [ApiController]
     public class CuentasController : ControllerBase
     {
-        // GET: api/<CuentasController>
+        private readonly ICuentaService _cuentaService;
+        public CuentasController(ICuentaService CuentaService)
+        {
+            _cuentaService = CuentaService;
+        }
+
+        // GET: api/<CuentaController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<CuentaReadDto>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var result = await _cuentaService.GetCuentas();
+            return result;
         }
 
-        // GET api/<CuentasController>/5
+        // GET api/<CuentaController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            return "value";
+            CuentaReadDto result = await _cuentaService.GetCuentaById(id);
+            return Ok(result);
         }
 
-        // POST api/<CuentasController>
+        // POST api/<CuentaController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] CuentaDto Cuenta)
         {
+            await _cuentaService.AddCuenta(Cuenta);
+
+            return Ok();
         }
 
-        // PUT api/<CuentasController>/5
+        // PUT api/<CuentaController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task Put(Guid id, [FromBody] CuentaDto Cuenta)
         {
+            StatusDto status = new StatusDto();
+            CuentaReadDto result = await _cuentaService.GetCuentaById(id);
+            if (result is null)
+            {
+                return;
+            }
+
+            await _cuentaService.UpdateCuenta(id, Cuenta);
+
+            return;
         }
 
-        // DELETE api/<CuentasController>/5
+        // DELETE api/<CuentaController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<StatusDto> Delete(Guid id)
         {
+
+            StatusDto status = new StatusDto();
+            CuentaReadDto result = await _cuentaService.GetCuentaById(id);
+            if (result is null)
+            {
+                status = new StatusDto { IsSuccess = false, Message = $"Cuenta {id} is not valid" };
+                return status;
+            }
+
+            status = await _cuentaService.RemoveCuentaById(id);
+
+            return status;
         }
     }
 }

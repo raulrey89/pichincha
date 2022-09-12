@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pichincha.Models\Pichincha.Models.csproj" />
+  </ItemGroup>
+
 </Project>

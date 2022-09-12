@@ -12,7 +12,7 @@ using Pichincha.Infrastructure.Database;
 namespace Pichincha.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220911165225_InitialMigration")]
+    [Migration("20220912002902_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,11 +26,9 @@ namespace Pichincha.Infrastructure.Migrations
 
             modelBuilder.Entity("Pichincha.Domain.Entities.ClienteEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Contrasena")
                         .IsRequired()
@@ -45,8 +43,8 @@ namespace Pichincha.Infrastructure.Migrations
                     b.Property<DateTime?>("FechaModificacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdPersona")
-                        .HasColumnType("int");
+                    b.Property<Guid>("IdPersona")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -57,11 +55,9 @@ namespace Pichincha.Infrastructure.Migrations
 
             modelBuilder.Entity("Pichincha.Domain.Entities.CuentaEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool?>("Estado")
                         .HasColumnType("bit");
@@ -72,8 +68,8 @@ namespace Pichincha.Infrastructure.Migrations
                     b.Property<DateTime?>("FechaModificacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdCliente")
-                        .HasColumnType("int");
+                    b.Property<Guid>("IdCliente")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NumeroCuenta")
                         .IsRequired()
@@ -95,17 +91,12 @@ namespace Pichincha.Infrastructure.Migrations
 
             modelBuilder.Entity("Pichincha.Domain.Entities.MovimientoEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool?>("Estado")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime>("Fecha")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
@@ -113,8 +104,8 @@ namespace Pichincha.Infrastructure.Migrations
                     b.Property<DateTime?>("FechaModificacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdCuenta")
-                        .HasColumnType("int");
+                    b.Property<Guid>("IdCuenta")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Saldo")
                         .HasColumnType("decimal(18,2)");
@@ -134,11 +125,9 @@ namespace Pichincha.Infrastructure.Migrations
 
             modelBuilder.Entity("Pichincha.Domain.Entities.PersonaEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Direccion")
                         .IsRequired()
