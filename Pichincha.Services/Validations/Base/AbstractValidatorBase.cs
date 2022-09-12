@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Pichincha.Api.Validations.Base
+namespace Pichincha.Services.Validations.Base
 {
     public class AbstractValidatorBase<TBody, T> : AbstractValidator<T>
     {

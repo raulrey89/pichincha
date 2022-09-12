@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Pichincha.Domain\Pichincha.Domain.csproj" />
     <ProjectReference Include="..\Pichincha.Models\Pichincha.Models.csproj" />
   </ItemGroup>

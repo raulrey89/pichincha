@@ -2,6 +2,7 @@
 using Pichincha.Domain.Interfaces;
 using Pichincha.Models.DTOs;
 using Pichincha.Models.Request;
+using Pichincha.Services.Exceptions;
 using Pichincha.Services.Intefaces;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,8 @@ namespace Pichincha.Services.Implementations
         public async Task<PersonaClienteReadDto> GetClienteById(Guid id)
         {
             var cliente = await _clienteRepository.GetAsync(id);
+            if (cliente is null)
+                throw new BadRequestException($"Cliente con Id = {id.ToString()} no existe.");
 
             return new PersonaClienteReadDto
             {
@@ -90,6 +93,9 @@ namespace Pichincha.Services.Implementations
             DateTime date = DateTime.Now;
 
             var cliente = await _clienteRepository.GetAsync(id);
+            if (cliente is null)
+                throw new BadRequestException($"Cliente con Id = {id.ToString()} no existe.");
+
             cliente.Contrasena = dto.Contrasena;
             cliente.Estado = dto.Estado;
             cliente.FechaModificacion = date;
@@ -104,6 +110,8 @@ namespace Pichincha.Services.Implementations
             try
             {
                 var cliente = await _clienteRepository.GetAsync(id);
+                if (cliente is null)
+                    throw new NotFoundException($"Cliente con Id = {id.ToString()} no existe.");
 
                 await _clienteRepository.DeleteAsync(cliente);
                 await _clienteRepository.SaveChangesAsync();

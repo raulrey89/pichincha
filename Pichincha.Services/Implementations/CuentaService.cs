@@ -1,6 +1,7 @@
 ﻿using Pichincha.Domain.Entities;
 using Pichincha.Domain.Interfaces;
 using Pichincha.Models.DTOs;
+using Pichincha.Services.Exceptions;
 using Pichincha.Services.Intefaces;
 using System;
 using System.Collections.Generic;
@@ -43,16 +44,18 @@ namespace Pichincha.Services.Implementations
 
         public async Task<CuentaReadDto> GetCuentaById(Guid id)
         {
-            var Cuenta = await _CuentaRepository.GetAsync(id);
+            var cuenta = await _CuentaRepository.GetAsync(id);
+            if (cuenta is null)
+                throw new BadRequestException($"Cuenta con Id = {id.ToString()} no existe.");
 
             return new CuentaReadDto
             {
-                Id = Cuenta.Id,
-                NumeroCuenta = Cuenta.NumeroCuenta,
-                IdCliente = Cuenta.IdCliente,
-                Estado = Cuenta.Estado,
-                SaldoInicial = Cuenta.SaldoInicial,
-                TipoCuenta = Cuenta.TipoCuenta
+                Id = cuenta.Id,
+                NumeroCuenta = cuenta.NumeroCuenta,
+                IdCliente = cuenta.IdCliente,
+                Estado = cuenta.Estado,
+                SaldoInicial = cuenta.SaldoInicial,
+                TipoCuenta = cuenta.TipoCuenta
 
             };
         }
@@ -80,6 +83,9 @@ namespace Pichincha.Services.Implementations
         {
             DateTime date = DateTime.Now;
             var cuenta = await _CuentaRepository.GetAsync(id);
+            if (cuenta is null)
+                throw new BadRequestException($"Cuenta con Id = {id.ToString()} no existe.");
+
             cuenta.NumeroCuenta = dto.NumeroCuenta;
             cuenta.IdCliente = dto.IdCliente;
             cuenta.Estado = dto.Estado;
@@ -96,10 +102,11 @@ namespace Pichincha.Services.Implementations
             StatusDto status = new StatusDto();
             try
             {
+                var cuenta = await _CuentaRepository.GetAsync(id);
+                if (cuenta is null)
+                    throw new NotFoundException($"Cuenta con Id = {id.ToString()} no existe.");
 
-                var Cuenta = await _CuentaRepository.GetAsync(id);
-
-                await _CuentaRepository.DeleteAsync(Cuenta);
+                await _CuentaRepository.DeleteAsync(cuenta);
                 await _CuentaRepository.SaveChangesAsync();
 
                 status.IsSuccess = true;

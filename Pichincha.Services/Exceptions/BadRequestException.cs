@@ -1,4 +1,4 @@
-﻿namespace Pichincha.Api.Exceptions
+﻿namespace Pichincha.Services.Exceptions
 {
     public class BadRequestException : ApplicationException
     {

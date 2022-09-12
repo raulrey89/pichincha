@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 
-namespace Pichincha.Api.Exceptions
+namespace Pichincha.Services.Exceptions
 {
     public class ValidationException : ApplicationException
     {

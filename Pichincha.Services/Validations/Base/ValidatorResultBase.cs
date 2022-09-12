@@ -1,6 +1,6 @@
 ﻿using FluentValidation.Results;
 
-namespace Pichincha.Api.Validations.Base
+namespace Pichincha.Services.Validations.Base
 {
     public class ValidatorResultBase<T> : ValidationResult
     {

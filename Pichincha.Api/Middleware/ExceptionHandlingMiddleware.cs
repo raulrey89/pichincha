@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Pichincha.Api.Exceptions;
+using Pichincha.Services.Exceptions;
 using System.Net;
 
 namespace Pichincha.Api.Middleware
@@ -59,11 +59,15 @@ namespace Pichincha.Api.Middleware
                     resultError = JsonConvert.SerializeObject(validationException.Errors);
                     break;
 
-                case NotFoundException notFoundException:
+                case NotFoundException notFound:
                     statusCode = HttpStatusCode.NotFound;
-                    resultError = JsonConvert.SerializeObject(notFoundException.Errors);
+                    resultError = JsonConvert.SerializeObject(notFound.Message);
                     break;
 
+                case BadRequestException badRequest:
+                    statusCode = HttpStatusCode.BadRequest;
+                    resultError = JsonConvert.SerializeObject(badRequest.Message);
+                    break;
                 default:
 
                     resultError = JsonConvert.SerializeObject(new ErrorDeatils

@@ -46,13 +46,6 @@ namespace Pichincha.Api.Controllers
         [HttpPut("{id}")]
         public async Task Put(Guid id, [FromBody] ClienteDto Cliente)
         {
-            StatusDto status = new StatusDto();
-            PersonaClienteReadDto result = await _clienteService.GetClienteById(id);
-            if (result is null)
-            {
-                return;
-            }
-
             await _clienteService.UpdateCliente(id, Cliente);
 
             return;
@@ -64,12 +57,6 @@ namespace Pichincha.Api.Controllers
         {
 
             StatusDto status = new StatusDto();
-            PersonaClienteReadDto result = await _clienteService.GetClienteById(id);
-            if (result is null)
-            {
-                status = new StatusDto { IsSuccess = false, Message = $"Cliente {id} is not valid" };
-                return status;
-            }
 
             status = await _clienteService.RemoveClienteById(id);
 

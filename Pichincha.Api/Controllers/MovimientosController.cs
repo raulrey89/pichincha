@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Pichincha.Models.DTOs;
+using Pichincha.Services.Exceptions;
 using Pichincha.Services.Intefaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -34,23 +35,17 @@ namespace Pichincha.Api.Controllers
 
         // POST api/<MovimientoController>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] MovimientoDto Movimiento)
+        public async Task<ActionResult<StatusDto>> Post([FromBody] MovimientoCreateDto movimiento)
         {
-            await _MovimientoService.AddMovimiento(Movimiento);
+            StatusDto resultado = await _MovimientoService.AddMovimiento(movimiento);
 
-            return Ok();
+            return Ok(resultado);
         }
 
         // PUT api/<MovimientoController>/5
         [HttpPut("{id}")]
         public async Task Put(Guid id, [FromBody] MovimientoDto Movimiento)
         {
-            StatusDto status = new StatusDto();
-            MovimientoReadDto result = await _MovimientoService.GetMovimientoById(id);
-            if (result is null)
-            {
-                return;
-            }
 
             await _MovimientoService.UpdateMovimiento(id, Movimiento);
 
@@ -61,16 +56,7 @@ namespace Pichincha.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<StatusDto> Delete(Guid id)
         {
-
-            StatusDto status = new StatusDto();
-            MovimientoReadDto result = await _MovimientoService.GetMovimientoById(id);
-            if (result is null)
-            {
-                status = new StatusDto { IsSuccess = false, Message = $"Movimiento {id} is not valid" };
-                return status;
-            }
-
-            status = await _MovimientoService.RemoveMovimientoById(id);
+            var status = await _MovimientoService.RemoveMovimientoById(id);
 
             return status;
         }

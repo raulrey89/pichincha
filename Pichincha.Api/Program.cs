@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Pichincha.Api.Middleware;
 using Pichincha.Domain.Interfaces;
@@ -5,6 +6,7 @@ using Pichincha.Infrastructure.Database;
 using Pichincha.Infrastructure.Repositories;
 using Pichincha.Services.Implementations;
 using Pichincha.Services.Intefaces;
+using Pichincha.Services.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+// AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 //if (environment.IsProduction())
 //{
@@ -49,6 +53,13 @@ builder.Services.AddScoped<ICuentaRepository, CuentaRepository>();
 builder.Services.AddScoped<IMovimientoRepository, MovimientoRepository>();
 
 #endregion
+
+var config = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile(new PichinchaMap());
+});
+var mapper = config.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();
 
