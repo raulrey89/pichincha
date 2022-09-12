@@ -2,13 +2,14 @@
 
 namespace Pichincha.Domain.Entities
 {
-    public class ClienteEntity : Entity
+    public class ClienteEntity : Persona
     {
-        public Guid Id { get; set; }
-        public Guid IdPersona { get; set; }
+        public ClienteEntity()
+        {
+            Cuentas = new List<CuentaEntity>();
+        }
         public string Contrasena { get; set; } = null!;
         public bool? Estado { get; set; }
-        public ICollection<CuentaEntity> Cuentas { get; set; }
-        public  PersonaEntity Persona { get; set; } = null!;
+        public virtual ICollection<CuentaEntity> Cuentas { get; set; }
     }
 }

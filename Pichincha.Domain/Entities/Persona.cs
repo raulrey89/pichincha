@@ -2,7 +2,7 @@
 
 namespace Pichincha.Domain.Entities
 {
-    public class PersonaEntity : Entity
+    public abstract class Persona : Entity
     {
         public Guid Id { get; set; }
         public string Nombre { get; set; } = null!;
@@ -11,7 +11,6 @@ namespace Pichincha.Domain.Entities
         public string? Identificacion { get; set; }
         public string Direccion { get; set; } = null!;
         public string Telefono { get; set; } = null!;
-        public List<ClienteEntity> Cliente { get; set; }
 
     }
 }

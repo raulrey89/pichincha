@@ -10,6 +10,6 @@ namespace Pichincha.Domain.Entities
         public decimal Valor { get; set; }
         public decimal Saldo { get; set; }
         public bool? Estado { get; set; }
-        public CuentaEntity Cuenta { get; set; } = null!;
+        public virtual CuentaEntity Cuenta { get; set; } = null!;
     }
 }

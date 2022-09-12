@@ -4,6 +4,10 @@ namespace Pichincha.Domain.Entities
 {
     public class CuentaEntity : Entity
     {
+        public CuentaEntity()
+        {
+            Movimientos = new List<MovimientoEntity>();
+        }
         public Guid Id { get; set; }
         public Guid IdCliente { get; set; }
         public string NumeroCuenta { get; set; } = null!;
