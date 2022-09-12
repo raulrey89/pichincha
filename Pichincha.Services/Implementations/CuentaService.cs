@@ -97,7 +97,7 @@ namespace Pichincha.Services.Implementations
 
                 var Cuenta = await _CuentaRepository.GetAsync(id);
 
-                await _CuentaRepository.RemoveAsync(Cuenta);
+                await _CuentaRepository.DeleteAsync(Cuenta);
 
                 status.IsSuccess = true;
 

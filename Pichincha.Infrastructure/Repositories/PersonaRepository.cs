@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Pichincha.Infrastructure.Repositories
 {
-    public class PersonaRepository : Repository<PersonaEntity, Guid>, IPersonaRepository
+    public class PersonaRepository : RepositoryBase<PersonaEntity>, IPersonaRepository
     {
         private readonly AppDbContext _context;
         public PersonaRepository(AppDbContext unitOfWork) : base(unitOfWork)

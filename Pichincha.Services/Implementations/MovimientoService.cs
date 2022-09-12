@@ -93,7 +93,7 @@ namespace Pichincha.Services.Implementations
 
                 var Movimiento = await _MovimientoRepository.GetAsync(id);
 
-                await _MovimientoRepository.RemoveAsync(Movimiento);
+                await _MovimientoRepository.DeleteAsync(Movimiento);
 
                 status.IsSuccess = true;
 

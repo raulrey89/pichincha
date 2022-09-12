@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Pichincha.Infrastructure.Repositories
 {
-    public class CuentaRepository : Repository<CuentaEntity, Guid>, ICuentaRepository
+    public class CuentaRepository : RepositoryBase<CuentaEntity>, ICuentaRepository
     {
         private readonly AppDbContext _context;
         public CuentaRepository(AppDbContext unitOfWork) : base(unitOfWork)

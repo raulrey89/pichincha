@@ -75,6 +75,7 @@ namespace Pichincha.Services.Implementations
                 };
 
                 await _personaRepository.AddAsync(personaEntity);
+                await _personaRepository.SaveChangesAsync();
 
                 var clienteEntity = new ClienteEntity
                 {
@@ -87,6 +88,7 @@ namespace Pichincha.Services.Implementations
                 };
 
                 await _clienteRepository.AddAsync(clienteEntity);
+                await _personaRepository.SaveChangesAsync();
 
             }
             catch (Exception ex)
@@ -116,7 +118,7 @@ namespace Pichincha.Services.Implementations
             {
                 var cliente = await _clienteRepository.GetAsync(id);
 
-                await _clienteRepository.RemoveAsync(cliente);
+                await _clienteRepository.DeleteAsync(cliente);
 
                 status.IsSuccess = true;
 

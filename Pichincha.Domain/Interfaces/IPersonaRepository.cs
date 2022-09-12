@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Pichincha.Domain.Interfaces
 {
-    public interface IPersonaRepository : IRepository<PersonaEntity, Guid>
+    public interface IPersonaRepository : IRepository<PersonaEntity>
     {
     }
 }

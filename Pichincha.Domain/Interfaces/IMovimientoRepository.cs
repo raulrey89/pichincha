@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Pichincha.Domain.Interfaces
 {
-    public interface IMovimientoRepository : IRepository<MovimientoEntity, Guid>
+    public interface IMovimientoRepository : IRepository<MovimientoEntity>
     {
     }
 }

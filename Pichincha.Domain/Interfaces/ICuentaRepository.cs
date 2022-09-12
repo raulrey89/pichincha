@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Pichincha.Domain.Interfaces
 {
-    public interface ICuentaRepository : IRepository<CuentaEntity, Guid>
+    public interface ICuentaRepository : IRepository<CuentaEntity>
     {
     }
 }

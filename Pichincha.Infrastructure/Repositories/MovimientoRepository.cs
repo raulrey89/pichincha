@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Pichincha.Infrastructure.Repositories
 {
-    public class MovimientoRepository : Repository<MovimientoEntity, Guid>, IMovimientoRepository
+    public class MovimientoRepository : RepositoryBase<MovimientoEntity>, IMovimientoRepository
     {
         private readonly AppDbContext _context;
         public MovimientoRepository(AppDbContext unitOfWork) : base(unitOfWork)

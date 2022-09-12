@@ -2,8 +2,9 @@
 
 namespace Pichincha.Domain.Entities
 {
-    public class PersonaEntity : Entity<Guid>
+    public class PersonaEntity : Entity
     {
+        public Guid Id { get; set; }
         public string Nombre { get; set; } = null!;
         public string? Genero { get; set; }
         public int? Edad { get; set; }

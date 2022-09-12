@@ -2,8 +2,9 @@
 
 namespace Pichincha.Domain.Entities
 {
-    public class MovimientoEntity : Entity<Guid>
+    public class MovimientoEntity : Entity
     {
+        public Guid Id { get; set; }
         public Guid IdCuenta { get; set; }
         public string? TipoMovimiento { get; set; }
         public decimal Valor { get; set; }

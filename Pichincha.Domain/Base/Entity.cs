@@ -21,32 +21,4 @@ namespace Pichincha.Domain.Base
 
         #endregion
     }
-
-    public abstract class Entity<TEntityId> : Entity
-    {
-        #region Members & Properties
-
-        /// <summary>
-        /// Defines the identifier for domain class
-        /// </summary>
-        public virtual TEntityId Id { get; set; }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Use to update creation/modified date for domain entity
-        /// </summary>
-        public virtual void UpdateModifiedDate()
-        {
-            if (this.FechaCreacion != default(DateTime))
-            {
-                this.FechaModificacion = DateTime.UtcNow;
-            }
-        }
-
-        #endregion
-
-    }
 }

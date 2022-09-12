@@ -2,28 +2,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Pichincha.Domain.Interfaces
 {
-    public interface IRepository<TEntity, in TEntityId> : IDisposable where TEntity : Entity<TEntityId>
+    public interface IRepository<T> where T : Entity
     {
-        void Add(TEntity item);
+        Task<T?> GetAsync(Guid id);
 
-        Task AddAsync(TEntity item);
+        Task<T?> GetAsync(Expression<Func<T, bool>> expression);
 
-        void Remove(TEntity item);
+        Task<List<T>> GetAllAsync();
 
-        Task RemoveAsync(TEntity item);
+        Task<T> AddAsync(T entity);
 
-        TEntity Get(TEntityId id);
+        Task AddRangeAsync(IList<T> value);
 
-        Task<TEntity> GetAsync(TEntityId id);
+        Task<T> UpdateAsync(T entity);
 
-        IEnumerable<TEntity> GetAll();
+        Task<bool> DeleteAsync(T entity);
 
-        Task<IEnumerable<TEntity>> GetAllAsync();
-        Task UpdateAsync(TEntity entity);
+        Task<List<T>> ListAsync(Expression<Func<T, bool>> expression);
+
+        Task<int> SaveChangesAsync();
     }
 }

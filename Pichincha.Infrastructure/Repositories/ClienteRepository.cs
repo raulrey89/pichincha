@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Pichincha.Infrastructure.Repositories
 {
-    public class ClienteRepository : Repository<ClienteEntity, Guid>, IClienteRepository
+    public class ClienteRepository : RepositoryBase<ClienteEntity>, IClienteRepository
     {
         private readonly AppDbContext _context;
         public ClienteRepository(AppDbContext unitOfWork) : base(unitOfWork)
