@@ -15,16 +15,14 @@ namespace Pichincha.Services.Implementations
     {
         #region Properties & Members
 
-        private readonly IPersonaRepository _personaRepository;
         private readonly IClienteRepository _clienteRepository;
 
         #endregion
 
         #region Constructors
 
-        public ClienteService(IClienteRepository ClienteRepository, IPersonaRepository personaRepository)
+        public ClienteService(IClienteRepository ClienteRepository)
         {
-            _personaRepository = personaRepository;
             _clienteRepository = ClienteRepository;
         }
 
@@ -35,66 +33,55 @@ namespace Pichincha.Services.Implementations
 
             return clientes.Select(x => new PersonaClienteReadDto
             {
-                IdCliente = x.Id,
-                IdPersona = x.IdPersona,
+                Id = x.Id,
+                Direccion = x.Direccion,
+                Edad = x.Edad,
+                Genero = x.Genero,
+                Identificacion = x.Identificacion,
+                Nombre = x.Nombre,
                 Estado = x.Estado
             });
         }
 
         public async Task<PersonaClienteReadDto> GetClienteById(Guid id)
         {
-            var clientes = await _clienteRepository.GetAsync(id);
+            var cliente = await _clienteRepository.GetAsync(id);
 
             return new PersonaClienteReadDto
             {
-                IdCliente = clientes.Id,
-                IdPersona = clientes.IdPersona,
-                Estado = clientes.Estado,
+                Id = cliente.Id,
+                Direccion = cliente.Direccion,
+                Edad = cliente.Edad,
+                Genero = cliente.Genero,
+                Identificacion = cliente.Identificacion,
+                Nombre = cliente.Nombre,
+                Estado = cliente.Estado
 
             };
         }
 
         public async Task AddCliente(PersonaCliente dto)
         {
-            try
+            DateTime date = DateTime.Now;
+
+            var clienteEntity = new ClienteEntity
             {
-                DateTime date = DateTime.Now;
-                Guid idPersona = Guid.NewGuid();
+                Id = Guid.NewGuid(),
+                Contrasena = dto.Contrasena,
+                Estado = dto.Estado,
+                Edad = dto.Edad,
+                Nombre = dto.Nombre,
+                Direccion = dto.Direccion,
+                Genero = dto.Genero,
+                Identificacion = dto.Identificacion,
+                Telefono = dto.Telefono,
+                FechaModificacion = date,
+                FechaCreacion = date
+            };
 
-                var personaEntity = new PersonaEntity
-                {
-                    Id = idPersona,
-                    Edad = dto.Edad,
-                    Nombre = dto.Nombre,
-                    Direccion = dto.Direccion,
-                    Genero = dto.Genero,
-                    Identificacion = dto.Identificacion,
-                    Telefono = dto.Telefono,
-                    FechaModificacion = date,
-                    FechaCreacion = date
-                };
-
-                await _personaRepository.AddAsync(personaEntity);
-                await _personaRepository.SaveChangesAsync();
-
-                var clienteEntity = new ClienteEntity
-                {
-                    Id = Guid.NewGuid(),
-                    IdPersona = idPersona,
-                    Contrasena = dto.Contrasena,
-                    Estado = dto.Estado,
-                    FechaModificacion = date,
-                    FechaCreacion = date
-                };
-
-                await _clienteRepository.AddAsync(clienteEntity);
-                await _personaRepository.SaveChangesAsync();
-
-            }
-            catch (Exception ex)
-            {
-                var x = ex.Message;
-            }
+            await _clienteRepository.AddAsync(clienteEntity);
+            await _clienteRepository.SaveChangesAsync();
+                        
         }
 
 
@@ -103,12 +90,12 @@ namespace Pichincha.Services.Implementations
             DateTime date = DateTime.Now;
 
             var cliente = await _clienteRepository.GetAsync(id);
-            cliente.IdPersona = dto.IdPersona;
             cliente.Contrasena = dto.Contrasena;
             cliente.Estado = dto.Estado;
             cliente.FechaModificacion = date;
 
             await _clienteRepository.UpdateAsync(cliente);
+            await _clienteRepository.SaveChangesAsync();
         }
 
         public async Task<StatusDto> RemoveClienteById(Guid id)
@@ -119,6 +106,7 @@ namespace Pichincha.Services.Implementations
                 var cliente = await _clienteRepository.GetAsync(id);
 
                 await _clienteRepository.DeleteAsync(cliente);
+                await _clienteRepository.SaveChangesAsync();
 
                 status.IsSuccess = true;
 

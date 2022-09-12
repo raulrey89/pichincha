@@ -69,6 +69,7 @@ namespace Pichincha.Services.Implementations
             };
 
             await _MovimientoRepository.AddAsync(movimientoEntity);
+            await _MovimientoRepository.SaveChangesAsync();
         }
 
 
@@ -83,6 +84,7 @@ namespace Pichincha.Services.Implementations
             Movimiento.FechaModificacion = date;
 
             await _MovimientoRepository.UpdateAsync(Movimiento);
+            await _MovimientoRepository.SaveChangesAsync();
         }
 
         public async Task<StatusDto> RemoveMovimientoById(Guid id)
@@ -94,6 +96,7 @@ namespace Pichincha.Services.Implementations
                 var Movimiento = await _MovimientoRepository.GetAsync(id);
 
                 await _MovimientoRepository.DeleteAsync(Movimiento);
+                await _MovimientoRepository.SaveChangesAsync();
 
                 status.IsSuccess = true;
 

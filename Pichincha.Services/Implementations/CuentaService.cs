@@ -71,7 +71,8 @@ namespace Pichincha.Services.Implementations
                 FechaCreacion = date
             };
 
-            await _CuentaRepository.AddAsync(cuentaEntity);
+            await _CuentaRepository.AddAsync(cuentaEntity); 
+            await _CuentaRepository.SaveChangesAsync();
         }
 
 
@@ -87,6 +88,7 @@ namespace Pichincha.Services.Implementations
             cuenta.FechaModificacion = date;
 
             await _CuentaRepository.UpdateAsync(cuenta);
+            await _CuentaRepository.SaveChangesAsync();
         }
 
         public async Task<StatusDto> RemoveCuentaById(Guid id)
@@ -98,6 +100,7 @@ namespace Pichincha.Services.Implementations
                 var Cuenta = await _CuentaRepository.GetAsync(id);
 
                 await _CuentaRepository.DeleteAsync(Cuenta);
+                await _CuentaRepository.SaveChangesAsync();
 
                 status.IsSuccess = true;
 
@@ -110,6 +113,33 @@ namespace Pichincha.Services.Implementations
                 status.Message = ex.Message;
                 return status;
             }
+        }
+        public async Task<List<ReporteDto>> GetReportePorFechas(Guid clienteId, DateTime fechaIni, DateTime fechaFin)
+        {
+            var cuenta = await _CuentaRepository.GetReportePorFechas(clienteId, fechaIni, fechaFin);
+
+            var result = await ObtenerFormatoSalida(cuenta);
+            return result;
+        }
+
+        public Task<List<ReporteDto>> ObtenerFormatoSalida(ClienteEntity cliente)
+        {
+            var reporte = (from cuenta in cliente.Cuentas
+                    from movimiento in cuenta.Movimientos
+                    let item = new ReporteDto
+                    {
+                        Cliente = cliente.Nombre,
+                        NumeroCuenta = cuenta.NumeroCuenta ?? "",
+                        Tipo = cuenta.TipoCuenta ?? "",
+                        Fecha = movimiento.FechaCreacion,
+                        SaldoInicial = movimiento.Saldo - movimiento.Valor,
+                        SaldoDisponible = movimiento.Saldo,
+                        Movimiento = movimiento.Valor,
+                        Estado = movimiento.Estado ?? true
+                    }
+                    select item).ToList();
+
+            return Task.FromResult(reporte);
         }
     }
 }

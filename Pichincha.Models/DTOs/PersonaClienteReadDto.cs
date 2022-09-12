@@ -8,8 +8,13 @@ namespace Pichincha.Models.DTOs
 {
     public class PersonaClienteReadDto : PersonaDto
     {
-        public Guid IdCliente { get; set; }
-        public Guid IdPersona { get; set; }
+        public Guid Id { get; set; }
+        public string Nombre { get; set; } = null!;
+        public string? Genero { get; set; }
+        public int? Edad { get; set; }
+        public string? Identificacion { get; set; }
+        public string Direccion { get; set; } = null!;
+        public string Telefono { get; set; } = null!;
         public string Contrasena { get; set; } = null!;
         public bool? Estado { get; set; }
     }
