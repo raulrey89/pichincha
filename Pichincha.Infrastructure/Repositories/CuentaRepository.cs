@@ -1,4 +1,5 @@
-﻿using Pichincha.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Pichincha.Domain.Entities;
 using Pichincha.Domain.Interfaces;
 using Pichincha.Infrastructure.Database;
 using System;
@@ -16,22 +17,14 @@ namespace Pichincha.Infrastructure.Repositories
         {
             _context = unitOfWork;
         }
-
-        //public async Task<IEnumerable<CuentaReadDto>> SearchCuentas(CuentaSearchDto paramSeach)
-        //{
-        //    IEnumerable<CuentaReadDto> list = await (from Cuenta in _context.Cuenta
-        //                                          where Cuenta.Name == paramSeach.Name || Cuenta.Breed == paramSeach.Breed || Cuenta.OwnerName == paramSeach.OwnerName || Cuenta.OwnerDni == paramSeach.OwnerDni
-        //                                          select new CuentaReadDto
-        //                                          {
-        //                                              Name = Cuenta.Name,
-        //                                              Breed = Cuenta.Breed,
-        //                                              OwnerName = Cuenta.OwnerName,
-        //                                              OwnerDni = Cuenta.OwnerDni,
-        //                                              OwnerPhone = Cuenta.OwnerPhone,
-        //                                              OwnerAddress = Cuenta.OwnerAddress
-        //                                          }).ToListAsync();
-
-        //    return list;
-        //}
+        public async Task<ClienteEntity> GetReportePorFechas(Guid clienteId, DateTime fechaIni, DateTime fechaFin)
+        {
+            return await _context.Cliente
+                    .Where(con => con.Id == clienteId)
+                    .Include(c => c.Cuentas)
+                    .ThenInclude(cue => cue.Movimientos
+                        .Where(mov => mov.FechaCreacion <= fechaFin && mov.FechaCreacion >= fechaIni))
+                    .FirstOrDefaultAsync();
+        }
     }
 }

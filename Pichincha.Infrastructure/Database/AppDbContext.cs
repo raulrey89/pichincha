@@ -22,10 +22,6 @@ namespace Pichincha.Infrastructure.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ClienteEntity>()
-                .HasOne(p => p.Persona)
-                .WithMany(b => b.Cliente)
-                .HasForeignKey(p => p.IdPersona);
 
             modelBuilder.Entity<CuentaEntity>()
                 .HasOne(p => p.Cliente)
@@ -45,7 +41,6 @@ namespace Pichincha.Infrastructure.Database
         public DbSet<CuentaEntity> Cuenta { get; set; }
         public DbSet<MovimientoEntity> Movimiento { get; set; }
         public DbSet<ClienteEntity> Cliente { get; set; }
-        public DbSet<PersonaEntity> Persona { get; set; }
 
         #endregion
 

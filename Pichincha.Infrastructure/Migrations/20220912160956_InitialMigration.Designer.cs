@@ -12,7 +12,7 @@ using Pichincha.Infrastructure.Database;
 namespace Pichincha.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220912002902_InitialMigration")]
+    [Migration("20220912160956_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,6 +34,13 @@ namespace Pichincha.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Direccion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Edad")
+                        .HasColumnType("int");
+
                     b.Property<bool?>("Estado")
                         .HasColumnType("bit");
 
@@ -43,12 +50,21 @@ namespace Pichincha.Infrastructure.Migrations
                     b.Property<DateTime?>("FechaModificacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("IdPersona")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Genero")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Identificacion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdPersona");
 
                     b.ToTable("Cliente");
                 });
@@ -123,55 +139,6 @@ namespace Pichincha.Infrastructure.Migrations
                     b.ToTable("Movimiento");
                 });
 
-            modelBuilder.Entity("Pichincha.Domain.Entities.PersonaEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Direccion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Edad")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaCreacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaModificacion")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Genero")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Identificacion")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Telefono")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Persona");
-                });
-
-            modelBuilder.Entity("Pichincha.Domain.Entities.ClienteEntity", b =>
-                {
-                    b.HasOne("Pichincha.Domain.Entities.PersonaEntity", "Persona")
-                        .WithMany("Cliente")
-                        .HasForeignKey("IdPersona")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Persona");
-                });
-
             modelBuilder.Entity("Pichincha.Domain.Entities.CuentaEntity", b =>
                 {
                     b.HasOne("Pichincha.Domain.Entities.ClienteEntity", "Cliente")
@@ -202,11 +169,6 @@ namespace Pichincha.Infrastructure.Migrations
             modelBuilder.Entity("Pichincha.Domain.Entities.CuentaEntity", b =>
                 {
                     b.Navigation("Movimientos");
-                });
-
-            modelBuilder.Entity("Pichincha.Domain.Entities.PersonaEntity", b =>
-                {
-                    b.Navigation("Cliente");
                 });
 #pragma warning restore 612, 618
         }
