@@ -35,7 +35,7 @@ namespace Pichincha.Api.Controllers
 
         // POST api/<MovimientoController>
         [HttpPost]
-        public async Task<ActionResult<StatusDto>> Post([FromBody] MovimientoCreateDto movimiento)
+        public async Task<IActionResult> Post([FromBody] MovimientoCreateDto movimiento)
         {
             StatusDto resultado = await _MovimientoService.AddMovimiento(movimiento);
 

@@ -36,9 +36,9 @@ namespace Pichincha.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CuentaDto Cuenta)
         {
-            await _cuentaService.AddCuenta(Cuenta);
+            StatusDto status = await _cuentaService.AddCuenta(Cuenta);
 
-            return Ok();
+            return Ok(status);
         }
 
         // PUT api/<CuentaController>/5

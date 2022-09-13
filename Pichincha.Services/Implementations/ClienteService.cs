@@ -63,7 +63,7 @@ namespace Pichincha.Services.Implementations
             };
         }
 
-        public async Task AddCliente(PersonaCliente dto)
+        public async Task<StatusDto> AddCliente(PersonaCliente dto)
         {
             DateTime date = DateTime.Now;
 
@@ -84,6 +84,8 @@ namespace Pichincha.Services.Implementations
 
             await _clienteRepository.AddAsync(clienteEntity);
             await _clienteRepository.SaveChangesAsync();
+
+            return new StatusDto { IsSuccess = true };
                         
         }
 

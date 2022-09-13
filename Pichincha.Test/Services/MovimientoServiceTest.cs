@@ -21,7 +21,7 @@ namespace Pichincha.Test.Services
         private readonly Mock<IMovimientoService> _movimientoService;
         private readonly Mock<IMovimientoRepository> _movimientoRepository;
         private readonly Mock<ICuentaRepository> _cuentaRepository;
-        private readonly Mock<IMapper> _mapper;
+        private readonly IMapper _mapper;
 
         public MovimientoServiceTest()
         {
@@ -31,7 +31,7 @@ namespace Pichincha.Test.Services
             _movimientoService = new Mock<IMovimientoService>();
             _movimientoRepository = new Mock<IMovimientoRepository>();
             _cuentaRepository = new Mock<ICuentaRepository>();
-            _mapper = new Mock<IMapper>();
+            _mapper = MapperHelper.InitMappings();
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace Pichincha.Test.Services
             _movimientoRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync(entityList);
 
             // Act
-            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper.Object);
+            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper);
             var result = await handler.GetMovimientos();
 
             // Assert
@@ -53,7 +53,7 @@ namespace Pichincha.Test.Services
         }
 
         [Fact]
-        public async Task Task_Cliente_GetById_RetornaValor()
+        public async Task Task_Movimiento_GetById_RetornaValor()
         {
 
             //Arrange
@@ -62,7 +62,7 @@ namespace Pichincha.Test.Services
             _movimientoRepository.Setup(repo => repo.GetAsync(entity.Id)).ReturnsAsync(entity);
 
             // Act
-            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper.Object);
+            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper);
             var result = await handler.GetMovimientoById(entity.Id);
 
             // Assert
@@ -73,7 +73,7 @@ namespace Pichincha.Test.Services
         }
 
         [Fact]
-        public async Task Task_Cliente_GetById_RetornaBadRequest()
+        public async Task Task_Movimiento_GetById_RetornaBadRequest()
         {
             //Arrange
             var entity = _fixture.Create<MovimientoEntity>();
@@ -81,14 +81,49 @@ namespace Pichincha.Test.Services
             _movimientoRepository.Setup(repo => repo.GetAsync(entity.Id));
 
             // Act
-            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper.Object);
+            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper);
 
             // Act
             await Assert.ThrowsAsync<BadRequestException>(() => handler.GetMovimientoById(entity.Id));
         }
 
         [Fact]
-        public async void Task_Delete_Post_Return_Successful()
+        public async Task Task_Movimiento_Post_Success()
+        {
+            //Arrange
+            var entity = _fixture.Create<MovimientoCreateDto>();
+            var entityCuenta = _fixture.Create<CuentaEntity>();
+
+            _cuentaRepository
+                .Setup(service => service.GetAsync(entity.IdCuenta)).ReturnsAsync(entityCuenta);
+
+            // Act
+            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper);
+            var retorno = await handler.AddMovimiento(entity);
+
+            // Assert
+            Assert.True(retorno.IsSuccess);
+        }
+
+        [Fact]
+        public async Task Task_Movimiento_Post_BadRequest()
+        {
+            //Arrange
+            var entity = _fixture.Create<MovimientoCreateDto>();
+            var entityCuenta = _fixture.Create<CuentaEntity>();
+
+            _cuentaRepository
+                .Setup(service => service.GetAsync(entity.IdCuenta));
+
+            // Act
+            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper);
+
+            //Assert  
+            await Assert.ThrowsAsync<BadRequestException>(() => handler.AddMovimiento(entity));
+        }
+
+        [Fact]
+        public async void Task_Movimiento_Delete_Return_Successful()
         {
             //Arrange
             var entity = _fixture.Create<MovimientoEntity>();
@@ -98,7 +133,7 @@ namespace Pichincha.Test.Services
                 .ReturnsAsync(entity);
 
             // Act
-            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper.Object);
+            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper);
             var result = await handler.RemoveMovimientoById(entity.Id);
 
             //Assert  
@@ -106,7 +141,7 @@ namespace Pichincha.Test.Services
         }
 
         [Fact]
-        public async void Task_Delete_Post_Return_NotFoundResult()
+        public async void Task_Movimiento_Delete_Return_NotFoundResult()
         {
             //Arrange
             var entity = _fixture.Create<MovimientoEntity>();
@@ -116,7 +151,7 @@ namespace Pichincha.Test.Services
                 .Setup(service => service.GetAsync(id));
 
             // Act
-            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper.Object);
+            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper);
 
             //Assert  
             await Assert.ThrowsAsync<NotFoundException>(() => handler.RemoveMovimientoById(id));

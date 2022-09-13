@@ -71,7 +71,7 @@ namespace Pichincha.Services.Implementations
             var cuentaEnBDD = await _cuentaRepository.GetAsync(movimientoDto.IdCuenta);
 
             if (cuentaEnBDD is null)
-                return new StatusDto { IsSuccess = false, Message = $"Cuenta con Id = {movimientoDto.IdCuenta} no existe." };
+                throw new BadRequestException($"Cuenta con Id = {movimientoDto.IdCuenta} no existe.");
 
             var movimiento = _mapper.Map<MovimientoEntity>(movimientoDto);
 

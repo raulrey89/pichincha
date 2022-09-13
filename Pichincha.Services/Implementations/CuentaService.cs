@@ -16,14 +16,16 @@ namespace Pichincha.Services.Implementations
         #region Properties & Members
 
         private readonly ICuentaRepository _CuentaRepository;
+        private readonly IClienteRepository _clienteRepository;
 
         #endregion
 
         #region Constructors
 
-        public CuentaService(ICuentaRepository CuentaRepository)
+        public CuentaService(ICuentaRepository CuentaRepository, IClienteRepository clienteRepository)
         {
             _CuentaRepository = CuentaRepository;
+            _clienteRepository = clienteRepository;
         }
 
         #endregion
@@ -58,10 +60,16 @@ namespace Pichincha.Services.Implementations
                 TipoCuenta = cuenta.TipoCuenta
 
             };
+
         }
 
-        public async Task AddCuenta(CuentaDto dto)
+        public async Task<StatusDto> AddCuenta(CuentaDto dto)
         {
+            var clienteEnBdd = await _clienteRepository.GetAsync(dto.IdCliente);
+
+            if (clienteEnBdd is null)
+                throw new BadRequestException($"Cliente con Id = {dto.IdCliente} no existe.");
+
             DateTime date = DateTime.Now;
             var cuentaEntity = new CuentaEntity
             {
@@ -76,6 +84,9 @@ namespace Pichincha.Services.Implementations
 
             await _CuentaRepository.AddAsync(cuentaEntity); 
             await _CuentaRepository.SaveChangesAsync();
+
+
+            return new StatusDto { IsSuccess = true };
         }
 
 

@@ -3,6 +3,7 @@ using Moq;
 using Pichincha.Domain.Entities;
 using Pichincha.Domain.Interfaces;
 using Pichincha.Models.DTOs;
+using Pichincha.Models.Request;
 using Pichincha.Services.Exceptions;
 using Pichincha.Services.Implementations;
 using System;
@@ -78,9 +79,22 @@ namespace Pichincha.Test.Services
             // Act
             await Assert.ThrowsAsync<BadRequestException>(() => handler.GetClienteById(entity.Id));
         }
+        [Fact]
+        public async Task Task_Movimiento_Post_Success()
+        {
+            //Arrange
+            var entity = _fixture.Create<PersonaCliente>();
+
+            // Act
+            var handler = new ClienteService(_clienteRepository.Object);
+            var retorno = await handler.AddCliente(entity);
+
+            // Assert
+            Assert.True(retorno.IsSuccess);
+        }
 
         [Fact]
-        public async void Task_Delete_Post_Return_Successful()
+        public async void Task_Cliente_Delete_Return_Successful()
         {
             //Arrange
             var entity = _fixture.Create<ClienteEntity>();
@@ -98,7 +112,7 @@ namespace Pichincha.Test.Services
         }
 
         [Fact]
-        public async void Task_Delete_Post_Return_NotFoundResult()
+        public async void Task_Cliente_Delete_Return_NotFoundResult()
         {
             //Arrange
             var entity = _fixture.Create<ClienteEntity>();

@@ -37,9 +37,9 @@ namespace Pichincha.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PersonaCliente Cliente)
         {
-            await _clienteService.AddCliente(Cliente);
+            var retorno = await _clienteService.AddCliente(Cliente);
 
-            return Ok();
+            return Ok(retorno);
         }
 
         // PUT api/<ClienteController>/5
