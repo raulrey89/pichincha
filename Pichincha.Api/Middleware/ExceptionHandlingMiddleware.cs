@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Pichincha.Services.Exceptions;
 using System.Net;
@@ -53,7 +54,14 @@ namespace Pichincha.Api.Middleware
                     });
                     context.Response.StatusCode = (int)statusCode;
                     break;
-
+                case SqlException:
+                    resultError = JsonConvert.SerializeObject(new ErrorDeatils
+                    {
+                        ErrorMessage = $"{exception.Message}",
+                        ErrorType = exception.GetType().Name
+                    });
+                    context.Response.StatusCode = (int)statusCode;
+                    break;
                 case ValidationException validationException:
                     statusCode = HttpStatusCode.BadRequest;
                     resultError = JsonConvert.SerializeObject(validationException.Errors);
