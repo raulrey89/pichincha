@@ -31,36 +31,17 @@ namespace Pichincha.Services.Implementations
         #endregion
         public async Task<IEnumerable<CuentaReadDto>> GetCuentas()
         {
-            var cuentas = await _CuentaRepository.GetAllAsync();
-
-            return cuentas.Select(x => new CuentaReadDto
-            {
-                Id = x.Id,
-                NumeroCuenta = x.NumeroCuenta,
-                IdCliente = x.IdCliente,
-                Estado = x.Estado,
-                SaldoInicial = x.SaldoInicial,
-                TipoCuenta = x.TipoCuenta
-            });
+            var cuentas = await _CuentaRepository.GetAllCuentasCliente();
+            return cuentas;
         }
 
         public async Task<CuentaReadDto> GetCuentaById(Guid id)
         {
-            var cuenta = await _CuentaRepository.GetAsync(id);
+            var cuenta = await _CuentaRepository.GetCuentaClienteById(id);
             if (cuenta is null)
-                throw new BadRequestException($"Cuenta con Id = {id.ToString()} no existe.");
+                throw new BadRequestException($"Cuenta con Id = {id} no existe.");
 
-            return new CuentaReadDto
-            {
-                Id = cuenta.Id,
-                NumeroCuenta = cuenta.NumeroCuenta,
-                IdCliente = cuenta.IdCliente,
-                Estado = cuenta.Estado,
-                SaldoInicial = cuenta.SaldoInicial,
-                TipoCuenta = cuenta.TipoCuenta
-
-            };
-
+            return cuenta;
         }
 
         public async Task<StatusDto> AddCuenta(CuentaDto dto)
@@ -76,7 +57,7 @@ namespace Pichincha.Services.Implementations
                 NumeroCuenta = dto.NumeroCuenta,
                 IdCliente = dto.IdCliente,
                 Estado = dto.Estado,
-                SaldoInicial = dto.SaldoInicial,
+                Saldo = dto.SaldoInicial,
                 TipoCuenta = dto.TipoCuenta,
                 FechaModificacion = date,
                 FechaCreacion = date
@@ -100,7 +81,7 @@ namespace Pichincha.Services.Implementations
             cuenta.NumeroCuenta = dto.NumeroCuenta;
             cuenta.IdCliente = dto.IdCliente;
             cuenta.Estado = dto.Estado;
-            cuenta.SaldoInicial = dto.SaldoInicial;
+            cuenta.Saldo = dto.SaldoInicial;
             cuenta.TipoCuenta = dto.TipoCuenta;
             cuenta.FechaModificacion = date;
 

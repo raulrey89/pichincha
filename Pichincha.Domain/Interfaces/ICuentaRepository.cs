@@ -10,6 +10,8 @@ namespace Pichincha.Domain.Interfaces
 {
     public interface ICuentaRepository : IRepository<CuentaEntity>
     {
+        Task<List<CuentaReadDto>> GetAllCuentasCliente();
+        Task<CuentaReadDto> GetCuentaClienteById(Guid id);
         Task<ClienteEntity> GetReportePorFechas(Guid clienteId, DateTime fechaIni, DateTime fechaFin);
     }
 }
