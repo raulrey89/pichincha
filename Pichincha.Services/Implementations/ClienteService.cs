@@ -40,6 +40,7 @@ namespace Pichincha.Services.Implementations
                 Genero = x.Genero,
                 Identificacion = x.Identificacion,
                 Nombre = x.Nombre,
+                Telefono = x.Telefono,
                 Estado = x.Estado
             });
         }
@@ -58,6 +59,7 @@ namespace Pichincha.Services.Implementations
                 Genero = cliente.Genero,
                 Identificacion = cliente.Identificacion,
                 Nombre = cliente.Nombre,
+                Telefono = cliente.Telefono,
                 Estado = cliente.Estado
 
             };
@@ -72,8 +74,8 @@ namespace Pichincha.Services.Implementations
                 Id = Guid.NewGuid(),
                 Contrasena = dto.Contrasena,
                 Estado = dto.Estado,
-                Edad = dto.Edad,
                 Nombre = dto.Nombre,
+                Edad = dto.Edad,
                 Direccion = dto.Direccion,
                 Genero = dto.Genero,
                 Identificacion = dto.Identificacion,
@@ -90,14 +92,20 @@ namespace Pichincha.Services.Implementations
         }
 
 
-        public async Task UpdateCliente(Guid id, ClienteDto dto)
+        public async Task UpdateCliente(Guid id, PersonaCliente dto)
         {
             DateTime date = DateTime.Now;
 
             var cliente = await _clienteRepository.GetAsync(id);
             if (cliente is null)
                 throw new BadRequestException($"Cliente con Id = {id.ToString()} no existe.");
-
+            
+            cliente.Nombre = dto.Nombre;
+            cliente.Edad = dto.Edad;
+            cliente.Direccion = dto.Direccion;
+            cliente.Genero = dto.Genero;
+            cliente.Identificacion = dto.Identificacion;
+            cliente.Telefono = dto.Telefono;
             cliente.Contrasena = dto.Contrasena;
             cliente.Estado = dto.Estado;
             cliente.FechaModificacion = date;

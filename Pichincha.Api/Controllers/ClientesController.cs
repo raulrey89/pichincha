@@ -44,7 +44,7 @@ namespace Pichincha.Api.Controllers
 
         // PUT api/<ClienteController>/5
         [HttpPut("{id}")]
-        public async Task Put(Guid id, [FromBody] ClienteDto Cliente)
+        public async Task Put(Guid id, [FromBody] PersonaCliente Cliente)
         {
             await _clienteService.UpdateCliente(id, Cliente);
 

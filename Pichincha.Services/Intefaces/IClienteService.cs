@@ -13,7 +13,7 @@ namespace Pichincha.Services.Intefaces
         Task<IEnumerable<PersonaClienteReadDto>> GetClientes();
         Task<PersonaClienteReadDto> GetClienteById(Guid id);
         Task<StatusDto> AddCliente(PersonaCliente dto);
-        Task UpdateCliente(Guid id, ClienteDto dto);
+        Task UpdateCliente(Guid id, PersonaCliente dto);
         Task<StatusDto> RemoveClienteById(Guid id);
     }
 }

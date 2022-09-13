@@ -85,7 +85,7 @@ namespace Pichincha.Services.Implementations
                 return new StatusDto { IsSuccess = false, Message = $"La cuenta {cuentaEnBDD.NumeroCuenta} no tiene saldo suficiente." };
             }
 
-            cuentaEnBDD.SaldoInicial = saldoNuevo;
+            cuentaEnBDD.Saldo = saldoNuevo;
             cuentaEnBDD.FechaModificacion = date;
 
             movimiento.Id = Guid.NewGuid();
@@ -138,14 +138,14 @@ namespace Pichincha.Services.Implementations
         {
             if (tipoMovimiento == "D")
             {
-                cuenta.SaldoInicial -= Math.Abs(valor);
+                cuenta.Saldo -= Math.Abs(valor);
             }
             else if(tipoMovimiento == "C")
             {
-                cuenta.SaldoInicial += Math.Abs(valor);
+                cuenta.Saldo += Math.Abs(valor);
             }
 
-            return cuenta.SaldoInicial;
+            return cuenta.Saldo;
         }
 
         public bool CuentaTieneSaldo(MovimientoEntity movimiento, CuentaEntity cuenta)
@@ -153,7 +153,7 @@ namespace Pichincha.Services.Implementations
             if (movimiento.TipoMovimiento == "C")
                 return true;
 
-            return Math.Abs(movimiento.Valor) <= cuenta.SaldoInicial;
+            return Math.Abs(movimiento.Valor) <= cuenta.Saldo;
         }
     }
 }
