@@ -100,26 +100,16 @@ namespace Pichincha.Services.Implementations
         public async Task<StatusDto> RemoveCuentaById(Guid id)
         {
             StatusDto status = new StatusDto();
-            try
-            {
-                var cuenta = await _CuentaRepository.GetAsync(id);
-                if (cuenta is null)
-                    throw new NotFoundException($"Cuenta con Id = {id.ToString()} no existe.");
+            var cuenta = await _CuentaRepository.GetAsync(id);
+            if (cuenta is null)
+                throw new NotFoundException($"Cuenta con Id = {id.ToString()} no existe.");
 
-                await _CuentaRepository.DeleteAsync(cuenta);
-                await _CuentaRepository.SaveChangesAsync();
+            await _CuentaRepository.DeleteAsync(cuenta);
+            await _CuentaRepository.SaveChangesAsync();
 
-                status.IsSuccess = true;
+            status.IsSuccess = true;
 
-                return status;
-            }
-            catch (Exception ex)
-            {
-
-                status.IsSuccess = false;
-                status.Message = ex.Message;
-                return status;
-            }
+            return status;
         }
         public async Task<List<ReporteDto>> GetReportePorFechas(Guid clienteId, DateTime fechaIni, DateTime fechaFin)
         {

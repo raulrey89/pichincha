@@ -107,26 +107,16 @@ namespace Pichincha.Services.Implementations
         public async Task<StatusDto> RemoveClienteById(Guid id)
         {
             StatusDto status = new StatusDto();
-            try
-            {
-                var cliente = await _clienteRepository.GetAsync(id);
-                if (cliente is null)
-                    throw new NotFoundException($"Cliente con Id = {id.ToString()} no existe.");
+            var cliente = await _clienteRepository.GetAsync(id);
+            if (cliente is null)
+                throw new NotFoundException($"Cliente con Id = {id.ToString()} no existe.");
 
-                await _clienteRepository.DeleteAsync(cliente);
-                await _clienteRepository.SaveChangesAsync();
+            await _clienteRepository.DeleteAsync(cliente);
+            await _clienteRepository.SaveChangesAsync();
 
-                status.IsSuccess = true;
+            status.IsSuccess = true;
 
-                return status;
-            }
-            catch (Exception ex)
-            {
-
-                status.IsSuccess = false;
-                status.Message = ex.Message;
-                return status;
-            }
+            return status;
         }
     }
 }
