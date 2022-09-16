@@ -92,7 +92,40 @@ namespace Pichincha.Test.Services
             // Assert
             Assert.True(retorno.IsSuccess);
         }
+        [Fact]
+        public async Task Task_Movimiento_Put_Success()
+        {
+            //Arrange
+            var entity = _fixture.Create<PersonaCliente>();
+            var entityCliente = _fixture.Create<ClienteEntity>();
 
+            _clienteRepository
+                .Setup(service => service.GetAsync(entityCliente.Id)).ReturnsAsync(entityCliente);
+
+            // Act
+            var handler = new ClienteService(_clienteRepository.Object);
+            var retorno = await handler.UpdateCliente(entityCliente.Id, entity);
+
+            // Assert
+            Assert.True(retorno.IsSuccess);
+        }
+
+        [Fact]
+        public async Task Task_Movimiento_Put_BadRequest()
+        {
+            //Arrange
+            var entity = _fixture.Create<PersonaCliente>();
+            var entityCliente = _fixture.Create<ClienteEntity>();
+
+            _clienteRepository
+                .Setup(service => service.GetAsync(entityCliente.Id));
+
+            // Act
+            var handler = new ClienteService(_clienteRepository.Object);
+
+            //Assert  
+            await Assert.ThrowsAsync<BadRequestException>(() => handler.UpdateCliente(entityCliente.Id, entity));
+        }
         [Fact]
         public async void Task_Cliente_Delete_Return_Successful()
         {

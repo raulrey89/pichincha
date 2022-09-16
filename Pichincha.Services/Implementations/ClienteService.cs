@@ -92,13 +92,13 @@ namespace Pichincha.Services.Implementations
         }
 
 
-        public async Task UpdateCliente(Guid id, PersonaCliente dto)
+        public async Task<StatusDto> UpdateCliente(Guid id, PersonaCliente dto)
         {
             DateTime date = DateTime.Now;
 
             var cliente = await _clienteRepository.GetAsync(id);
             if (cliente is null)
-                throw new BadRequestException($"Cliente con Id = {id.ToString()} no existe.");
+                throw new BadRequestException($"Cliente con Id = {id} no existe.");
             
             cliente.Nombre = dto.Nombre;
             cliente.Edad = dto.Edad;
@@ -112,6 +112,8 @@ namespace Pichincha.Services.Implementations
 
             await _clienteRepository.UpdateAsync(cliente);
             await _clienteRepository.SaveChangesAsync();
+
+            return new StatusDto { IsSuccess = true };
         }
 
         public async Task<StatusDto> RemoveClienteById(Guid id)

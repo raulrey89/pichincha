@@ -6,11 +6,6 @@ using Pichincha.Domain.Interfaces;
 using Pichincha.Models.DTOs;
 using Pichincha.Services.Exceptions;
 using Pichincha.Services.Implementations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pichincha.Test.Services
 {
@@ -19,6 +14,7 @@ namespace Pichincha.Test.Services
         private readonly Fixture _fixture;
         private readonly Mock<ICuentaRepository> _cuentaRepository;
         private readonly Mock<IClienteRepository> _clienteRepository;
+        private readonly Mock<IMovimientoRepository> _movimientoRepository;
 
         public CuentaServiceTest()
         {
@@ -27,6 +23,7 @@ namespace Pichincha.Test.Services
             _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
             _cuentaRepository = new Mock<ICuentaRepository>();
             _clienteRepository = new Mock<IClienteRepository>();
+            _movimientoRepository = new Mock<IMovimientoRepository>();
         }
 
         [Fact]
@@ -34,12 +31,12 @@ namespace Pichincha.Test.Services
         {
 
             //Arrange
-            var entityList = _fixture.CreateMany<CuentaEntity>().ToList();
+            var entityList = _fixture.CreateMany<CuentaReadDto>().ToList();
 
-            _cuentaRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync(entityList);
+            _cuentaRepository.Setup(repo => repo.GetAllCuentasCliente()).ReturnsAsync(entityList);
 
             // Act
-            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object);
+            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object, _movimientoRepository.Object);
             var result = await handler.GetCuentas();
 
             // Assert
@@ -52,12 +49,12 @@ namespace Pichincha.Test.Services
         {
 
             //Arrange
-            var entity = _fixture.Create<CuentaEntity>();
+            var entity = _fixture.Create<CuentaReadDto>();
 
-            _cuentaRepository.Setup(repo => repo.GetAsync(entity.Id)).ReturnsAsync(entity);
+            _cuentaRepository.Setup(repo => repo.GetCuentaClienteById(entity.Id)).ReturnsAsync(entity);
 
             // Act
-            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object);
+            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object, _movimientoRepository.Object);
             var result = await handler.GetCuentaById(entity.Id);
 
             // Assert
@@ -76,12 +73,46 @@ namespace Pichincha.Test.Services
             _cuentaRepository.Setup(repo => repo.GetAsync(entity.Id));
 
             // Act
-            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object);
+            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object, _movimientoRepository.Object);
 
             // Act
             await Assert.ThrowsAsync<BadRequestException>(() => handler.GetCuentaById(entity.Id));
         }
 
+        [Fact]
+        public async Task Task_Cuenta_Put_Success()
+        {
+            //Arrange
+            var entity = _fixture.Create<CuentaDto>();
+            var entityCuenta = _fixture.Create<CuentaEntity>();
+
+            _cuentaRepository
+                .Setup(service => service.GetAsync(entityCuenta.Id)).ReturnsAsync(entityCuenta);
+
+            // Act
+            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object, _movimientoRepository.Object);
+            var retorno = await handler.UpdateCuenta(entityCuenta.Id, entity);
+
+            // Assert
+            Assert.True(retorno.IsSuccess);
+        }
+
+        [Fact]
+        public async Task Task_Cuenta_Put_BadRequest()
+        {
+            //Arrange
+            var entity = _fixture.Create<CuentaDto>();
+            var entityCuenta = _fixture.Create<CuentaEntity>();
+
+            _cuentaRepository
+                .Setup(service => service.GetAsync(entityCuenta.Id));
+
+            // Act
+            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object, _movimientoRepository.Object);
+
+            //Assert  
+            await Assert.ThrowsAsync<BadRequestException>(() => handler.UpdateCuenta(entityCuenta.Id, entity));
+        }
 
         [Fact]
         public async Task Task_Cuenta_Post_Success()
@@ -94,7 +125,7 @@ namespace Pichincha.Test.Services
                 .Setup(service => service.GetAsync(entity.IdCliente)).ReturnsAsync(entityClient);
 
             // Act
-            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object);
+            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object, _movimientoRepository.Object);
             var retorno = await handler.AddCuenta(entity);
 
             // Assert
@@ -112,7 +143,7 @@ namespace Pichincha.Test.Services
                 .Setup(service => service.GetAsync(entity.IdCliente));
 
             // Act
-            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object);
+            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object, _movimientoRepository.Object);
 
             //Assert  
             await Assert.ThrowsAsync<BadRequestException>(() => handler.AddCuenta(entity));
@@ -129,7 +160,7 @@ namespace Pichincha.Test.Services
                 .ReturnsAsync(entity);
 
             // Act
-            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object);
+            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object, _movimientoRepository.Object);
             var result = await handler.RemoveCuentaById(entity.Id);
 
             //Assert  
@@ -147,10 +178,30 @@ namespace Pichincha.Test.Services
                 .Setup(service => service.GetAsync(id));
 
             // Act
-            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object);
+            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object, _movimientoRepository.Object);
 
             //Assert  
             await Assert.ThrowsAsync<NotFoundException>(() => handler.RemoveCuentaById(id));
+        }
+
+
+        [Fact]
+        public async void Task_Report_Return_Type()
+        {
+            //Arrange
+            var entity = _fixture.Create<ClienteEntity>();
+            var listEntity = _fixture.CreateMany<ReporteDto>().ToList();
+
+            _cuentaRepository
+                .Setup(service => service.GetReportePorFechas(entity.Id, DateTime.Today.AddMonths(-2), DateTime.Today))
+                .ReturnsAsync(listEntity);
+
+            // Act
+            var handler = new CuentaService(_cuentaRepository.Object, _clienteRepository.Object, _movimientoRepository.Object);
+            var result = await handler.GetReportePorFechas(entity.Id, DateTime.Today.AddMonths(-2), DateTime.Today);
+
+            //Assert  
+            Assert.IsType<List<ReporteDto>>(result);
         }
     }
 }

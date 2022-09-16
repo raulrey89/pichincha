@@ -13,7 +13,7 @@ namespace Pichincha.Services.Intefaces
         Task<IEnumerable<CuentaReadDto>> GetCuentas();
         Task<CuentaReadDto> GetCuentaById(Guid id);
         Task<StatusDto> AddCuenta(CuentaDto dto);
-        Task UpdateCuenta(Guid id, CuentaDto dto);
+        Task<StatusDto> UpdateCuenta(Guid id, CuentaDto dto);
         Task<StatusDto> RemoveCuentaById(Guid id);
         Task<List<ReporteDto>> GetReportePorFechas(Guid clienteId, DateTime fechaIni, DateTime fechaFin);
     }

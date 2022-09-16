@@ -1,4 +1,5 @@
-﻿using Pichincha.Domain.Entities;
+﻿using Pichincha.Domain.Common;
+using Pichincha.Domain.Entities;
 using Pichincha.Domain.Interfaces;
 using Pichincha.Models.DTOs;
 using Pichincha.Services.Exceptions;
@@ -17,15 +18,17 @@ namespace Pichincha.Services.Implementations
 
         private readonly ICuentaRepository _CuentaRepository;
         private readonly IClienteRepository _clienteRepository;
+        private readonly IMovimientoRepository _movimientoRepository;
 
         #endregion
 
         #region Constructors
 
-        public CuentaService(ICuentaRepository CuentaRepository, IClienteRepository clienteRepository)
+        public CuentaService(ICuentaRepository CuentaRepository, IClienteRepository clienteRepository, IMovimientoRepository movimientoRepository)
         {
             _CuentaRepository = CuentaRepository;
             _clienteRepository = clienteRepository;
+            _movimientoRepository = movimientoRepository;
         }
 
         #endregion
@@ -52,8 +55,10 @@ namespace Pichincha.Services.Implementations
                 throw new BadRequestException($"Cliente con Id = {dto.IdCliente} no existe.");
 
             DateTime date = DateTime.Now;
+            Guid idCuenta = Guid.NewGuid();
             var cuentaEntity = new CuentaEntity
             {
+                Id = idCuenta,
                 NumeroCuenta = dto.NumeroCuenta,
                 IdCliente = dto.IdCliente,
                 Estado = dto.Estado,
@@ -63,15 +68,28 @@ namespace Pichincha.Services.Implementations
                 FechaCreacion = date
             };
 
-            await _CuentaRepository.AddAsync(cuentaEntity); 
-            await _CuentaRepository.SaveChangesAsync();
+            var movimiento = new MovimientoEntity
+            {
+                Id = Guid.NewGuid(),
+                IdCuenta = idCuenta,
+                TipoMovimiento = TipoMovimientos.C.ToString(),
+                Valor = dto.SaldoInicial,
+                Saldo = dto.SaldoInicial,
+                FechaModificacion = date,
+                FechaCreacion = date
+            };
 
+            await _movimientoRepository.AddAsync(movimiento);
+
+            await _CuentaRepository.AddAsync(cuentaEntity); 
+
+            await _CuentaRepository.SaveChangesAsync();
 
             return new StatusDto { IsSuccess = true };
         }
 
 
-        public async Task UpdateCuenta(Guid id, CuentaDto dto)
+        public async Task<StatusDto> UpdateCuenta(Guid id, CuentaDto dto)
         {
             DateTime date = DateTime.Now;
             var cuenta = await _CuentaRepository.GetAsync(id);
@@ -87,6 +105,8 @@ namespace Pichincha.Services.Implementations
 
             await _CuentaRepository.UpdateAsync(cuenta);
             await _CuentaRepository.SaveChangesAsync();
+
+            return new StatusDto { IsSuccess = true };
         }
 
         public async Task<StatusDto> RemoveCuentaById(Guid id)
@@ -106,29 +126,8 @@ namespace Pichincha.Services.Implementations
         public async Task<List<ReporteDto>> GetReportePorFechas(Guid clienteId, DateTime fechaIni, DateTime fechaFin)
         {
             var cuenta = await _CuentaRepository.GetReportePorFechas(clienteId, fechaIni, fechaFin);
-
-            var result = await ObtenerFormatoSalida(cuenta);
-            return result;
-        }
-
-        public Task<List<ReporteDto>> ObtenerFormatoSalida(ClienteEntity cliente)
-        {
-            var reporte = (from cuenta in cliente.Cuentas
-                    from movimiento in cuenta.Movimientos
-                    let item = new ReporteDto
-                    {
-                        Cliente = cliente.Nombre,
-                        NumeroCuenta = cuenta.NumeroCuenta ?? "",
-                        Tipo = cuenta.TipoCuenta ?? "",
-                        Fecha = movimiento.FechaCreacion,
-                        SaldoInicial = movimiento.Saldo - movimiento.Valor,
-                        SaldoDisponible = movimiento.Saldo,
-                        Movimiento = movimiento.Valor,
-                        Estado = movimiento.Estado ?? true
-                    }
-                    select item).ToList();
-
-            return Task.FromResult(reporte);
+            var listaOrdenada = cuenta.OrderBy(o => o.NumeroCuenta).ThenBy(t => t.Fecha).ToList();
+            return listaOrdenada;
         }
     }
 }

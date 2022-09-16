@@ -1,11 +1,6 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using Pichincha.Api.DependencyInjection;
 using Pichincha.Api.Middleware;
-using Pichincha.Domain.Interfaces;
-using Pichincha.Infrastructure.Database;
-using Pichincha.Infrastructure.Repositories;
-using Pichincha.Services.Implementations;
-using Pichincha.Services.Intefaces;
 using Pichincha.Services.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,37 +17,10 @@ builder.Services.AddSwaggerGen();
 // AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-//if (environment.IsProduction())
-//{
-Console.WriteLine("--> Using SqlServer DB");
-builder.Services.AddDbContext<AppDbContext>(opt =>
-                 opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-        x => x.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
-Console.WriteLine($"Server DB {configuration.GetConnectionString("DefaultConnection")}");
-//}
-//else
-//{
-
-//    Console.WriteLine("--> Using InMem DB");
-//    builder.Services.AddDbContext<AppDbContext>(opt =>
-//                     opt.UseInMemoryDatabase("InMem"));
-//}
-
-#region Injection Services
-
-builder.Services.AddScoped<IClienteService, ClienteService>();
-builder.Services.AddScoped<ICuentaService, CuentaService>();
-builder.Services.AddScoped<IMovimientoService, MovimientoService>();
-
-#endregion
-
-#region Injection Repository
-
-builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
-builder.Services.AddScoped<ICuentaRepository, CuentaRepository>();
-builder.Services.AddScoped<IMovimientoRepository, MovimientoRepository>();
-
-#endregion
+// Custom dependencies
+builder.Services.AddServices();
+builder.Services.AddRepositories();
+builder.Services.AddDatabase(builder.Configuration);
 
 var config = new MapperConfiguration(cfg =>
 {

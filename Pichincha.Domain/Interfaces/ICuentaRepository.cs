@@ -12,6 +12,6 @@ namespace Pichincha.Domain.Interfaces
     {
         Task<List<CuentaReadDto>> GetAllCuentasCliente();
         Task<CuentaReadDto> GetCuentaClienteById(Guid id);
-        Task<ClienteEntity> GetReportePorFechas(Guid clienteId, DateTime fechaIni, DateTime fechaFin);
+        Task<List<ReporteDto>> GetReportePorFechas(Guid clienteId, DateTime fechaIni, DateTime fechaFin);
     }
 }

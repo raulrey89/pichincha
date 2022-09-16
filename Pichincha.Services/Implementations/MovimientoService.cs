@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Pichincha.Domain.Common;
 using Pichincha.Domain.Entities;
 using Pichincha.Domain.Interfaces;
+using Pichincha.Infrastructure.Repositories;
 using Pichincha.Models.DTOs;
 using Pichincha.Services.Exceptions;
 using Pichincha.Services.Intefaces;
@@ -78,7 +80,7 @@ namespace Pichincha.Services.Implementations
             if (movimiento.TipoMovimiento is null)
                 return new StatusDto { IsSuccess = false, Message = "TipoMovimiento no válido." };
 
-            var saldoNuevo = CalcularNuevoSaldo(cuentaEnBDD, movimiento.TipoMovimiento, movimiento.Valor);
+            var saldoNuevo = CalcularNuevoSaldoCuenta(cuentaEnBDD, movimiento.TipoMovimiento, movimiento.Valor);
 
             if (saldoNuevo < 0)
             {
@@ -102,21 +104,35 @@ namespace Pichincha.Services.Implementations
         }
 
 
-        public async Task UpdateMovimiento(Guid id, MovimientoDto dto)
+        public async Task<StatusDto> UpdateMovimiento(Guid id, MovimientoDto dto)
         {
             DateTime date = DateTime.Now;
             var movimiento = await _movimientoRepository.GetAsync(id);
             if (movimiento is null)
-                throw new BadRequestException($"Movimiento con Id = {id.ToString()} no existe.");
+                throw new BadRequestException($"Movimiento con Id = {id} no existe.");
+
+            var cuentaEnBDD = await _cuentaRepository.GetAsync(movimiento.IdCuenta);
+            var saldoActualizado = ActualizarSaldoCuenta(cuentaEnBDD, movimiento, dto.TipoMovimiento, dto.Valor);
+
+            if (saldoActualizado < 0)
+            {
+                throw new BadRequestException($"Ha ocurrido un error por favor contacte al banco");
+            }
+
+            //Actualizamos el saldo en la cuenta
+            cuentaEnBDD.Saldo = saldoActualizado;
+            cuentaEnBDD.FechaModificacion = date;
 
             movimiento.IdCuenta = dto.IdCuenta;
             movimiento.TipoMovimiento = dto.TipoMovimiento;
             movimiento.Valor = dto.Valor;
-            movimiento.Saldo = dto.Saldo;
+            movimiento.Saldo = saldoActualizado;
             movimiento.FechaModificacion = date;
 
             await _movimientoRepository.UpdateAsync(movimiento);
             await _movimientoRepository.SaveChangesAsync();
+
+            return new StatusDto { IsSuccess = true, Message = movimiento.Id.ToString() };
         }
 
         public async Task<StatusDto> RemoveMovimientoById(Guid id)
@@ -124,7 +140,19 @@ namespace Pichincha.Services.Implementations
             StatusDto status = new StatusDto();
             var movimiento = await _movimientoRepository.GetAsync(id);
             if (movimiento is null)
-                throw new NotFoundException($"Cuenta con Id = {id.ToString()} no existe.");
+                throw new NotFoundException($"Cuenta con Id = {id} no existe.");
+
+            var cuentaEnBDD = await _cuentaRepository.GetAsync(movimiento.IdCuenta);
+            var saldoNuevo = EliminarSaldoCuenta(cuentaEnBDD, movimiento);
+
+            if (saldoNuevo < 0)
+            {
+                throw new BadRequestException($"Ha ocurrido un error por favor contacte al banco");
+            }
+
+            //Actualizamos el saldo en la cuenta
+            cuentaEnBDD.Saldo = saldoNuevo;
+            cuentaEnBDD.FechaModificacion = DateTime.Now;
 
             await _movimientoRepository.DeleteAsync(movimiento);
             await _movimientoRepository.SaveChangesAsync();
@@ -134,13 +162,13 @@ namespace Pichincha.Services.Implementations
             return status;
 
         }
-        public decimal CalcularNuevoSaldo(CuentaEntity cuenta, string tipoMovimiento, decimal valor)
+        public decimal CalcularNuevoSaldoCuenta(CuentaEntity cuenta, string tipoMovimiento, decimal valor)
         {
-            if (tipoMovimiento == "D")
+            if (tipoMovimiento == TipoMovimientos.D.ToString())
             {
                 cuenta.Saldo -= Math.Abs(valor);
             }
-            else if(tipoMovimiento == "C")
+            else if(tipoMovimiento == TipoMovimientos.C.ToString())
             {
                 cuenta.Saldo += Math.Abs(valor);
             }
@@ -148,12 +176,43 @@ namespace Pichincha.Services.Implementations
             return cuenta.Saldo;
         }
 
-        public bool CuentaTieneSaldo(MovimientoEntity movimiento, CuentaEntity cuenta)
+        public decimal ActualizarSaldoCuenta(CuentaEntity cuenta, MovimientoEntity mov, string tipoMovimiento, decimal valor)
         {
-            if (movimiento.TipoMovimiento == "C")
-                return true;
+            //Reversamos el movimiento anterior
+            if (mov.TipoMovimiento == TipoMovimientos.D.ToString())
+            {
+                cuenta.Saldo += Math.Abs(mov.Valor);
+            }
+            else if (mov.TipoMovimiento == TipoMovimientos.C.ToString())
+            {
+                cuenta.Saldo -= Math.Abs(mov.Valor);
+            }
 
-            return Math.Abs(movimiento.Valor) <= cuenta.Saldo;
+            //Calculamos el nuevo saldo
+            if (tipoMovimiento == TipoMovimientos.D.ToString())
+            {
+                cuenta.Saldo -= Math.Abs(valor);
+            }
+            else if (tipoMovimiento == TipoMovimientos.C.ToString())
+            {
+                cuenta.Saldo += Math.Abs(valor);
+            }
+
+            return cuenta.Saldo;
+        }
+        public decimal EliminarSaldoCuenta(CuentaEntity cuenta, MovimientoEntity mov)
+        {
+            //Reversamos el movimiento anterior
+            if (mov.TipoMovimiento == TipoMovimientos.D.ToString())
+            {
+                cuenta.Saldo += Math.Abs(mov.Valor);
+            }
+            else if (mov.TipoMovimiento == TipoMovimientos.C.ToString())
+            {
+                cuenta.Saldo -= Math.Abs(mov.Valor);
+            }
+
+            return cuenta.Saldo;
         }
     }
 }

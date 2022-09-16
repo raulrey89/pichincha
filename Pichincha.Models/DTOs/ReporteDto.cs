@@ -14,7 +14,7 @@ namespace Pichincha.Models.DTOs
         public string Tipo { get; set; } = null!;
         public Decimal SaldoInicial { get; set; }
         public bool Estado { get; set; }
-        public decimal Movimiento { get; set; }
+        public string Movimiento { get; set; }
         public decimal SaldoDisponible { get; set; }
 
     }

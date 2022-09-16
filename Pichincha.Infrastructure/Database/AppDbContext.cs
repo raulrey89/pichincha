@@ -43,6 +43,5 @@ namespace Pichincha.Infrastructure.Database
         public DbSet<ClienteEntity> Cliente { get; set; }
 
         #endregion
-
     }
 }

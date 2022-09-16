@@ -16,6 +16,8 @@ namespace Pichincha.Infrastructure.Repositories
         protected readonly DbSet<T> DbSet;
         protected readonly AppDbContext DbContext;
 
+
+
         public RepositoryBase(AppDbContext dbContext)
         {
             DbSet = dbContext.Set<T>();

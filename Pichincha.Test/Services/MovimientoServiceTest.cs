@@ -121,16 +121,59 @@ namespace Pichincha.Test.Services
             //Assert  
             await Assert.ThrowsAsync<BadRequestException>(() => handler.AddMovimiento(entity));
         }
+        [Fact]
+        public async Task Task_Movimiento_Put_Success()
+        {
+            //Arrange
+            var entity = _fixture.Create<MovimientoDto>();
+            var entityMovimiento = _fixture.Create<MovimientoEntity>();
+            var entityCuenta = _fixture.Create<CuentaEntity>();
 
+            _movimientoRepository
+                .Setup(service => service.GetAsync(entityMovimiento.Id)).ReturnsAsync(entityMovimiento);
+
+            entityCuenta.Id = entityMovimiento.IdCuenta;
+            _cuentaRepository
+                .Setup(service => service.GetAsync(entityCuenta.Id)).ReturnsAsync(entityCuenta);
+
+            // Act
+            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper);
+            var retorno = await handler.UpdateMovimiento(entityMovimiento.Id, entity);
+
+            // Assert
+            Assert.True(retorno.IsSuccess);
+        }
+
+        [Fact]
+        public async Task Task_Movimiento_Put_BadRequest()
+        {
+            //Arrange
+            var entity = _fixture.Create<MovimientoDto>();
+            var entityMovimiento = _fixture.Create<MovimientoEntity>();
+
+            _movimientoRepository
+                .Setup(service => service.GetAsync(entityMovimiento.Id));
+
+            // Act
+            var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper);
+
+            //Assert  
+            await Assert.ThrowsAsync<BadRequestException>(() => handler.UpdateMovimiento(entityMovimiento.Id, entity));
+        }
         [Fact]
         public async void Task_Movimiento_Delete_Return_Successful()
         {
             //Arrange
             var entity = _fixture.Create<MovimientoEntity>();
+            var entityCuenta = _fixture.Create<CuentaEntity>();
 
             _movimientoRepository
                 .Setup(service => service.GetAsync(entity.Id))
                 .ReturnsAsync(entity);
+
+            entityCuenta.Id = entity.IdCuenta;
+            _cuentaRepository
+                .Setup(service => service.GetAsync(entityCuenta.Id)).ReturnsAsync(entityCuenta);
 
             // Act
             var handler = new MovimientoService(_movimientoRepository.Object, _cuentaRepository.Object, _mapper);

@@ -12,7 +12,7 @@ namespace Pichincha.Services.Intefaces
         Task<IEnumerable<MovimientoReadDto>> GetMovimientos();
         Task<MovimientoReadDto> GetMovimientoById(Guid id);
         Task<StatusDto> AddMovimiento(MovimientoCreateDto dto);
-        Task UpdateMovimiento(Guid id, MovimientoDto dto);
+        Task<StatusDto> UpdateMovimiento(Guid id, MovimientoDto dto);
         Task<StatusDto> RemoveMovimientoById(Guid id);
     }
 }

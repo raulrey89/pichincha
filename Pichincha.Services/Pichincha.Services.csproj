@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pichincha.Domain\Pichincha.Domain.csproj" />
+    <ProjectReference Include="..\Pichincha.Infrastructure\Pichincha.Infrastructure.csproj" />
     <ProjectReference Include="..\Pichincha.Models\Pichincha.Models.csproj" />
   </ItemGroup>
 

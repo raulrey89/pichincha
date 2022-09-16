@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pichincha.Domain.Common;
 using Pichincha.Domain.Entities;
 using Pichincha.Domain.Interfaces;
 using Pichincha.Infrastructure.Database;
@@ -18,16 +19,30 @@ namespace Pichincha.Infrastructure.Repositories
         {
             _context = unitOfWork;
         }
-        public async Task<ClienteEntity> GetReportePorFechas(Guid clienteId, DateTime fechaIni, DateTime fechaFin)
-        {
-            return await _context.Cliente
-                    .Where(con => con.Id == clienteId)
-                    .Include(c => c.Cuentas)
-                    .ThenInclude(cue => cue.Movimientos
-                        .Where(mov => mov.FechaCreacion <= fechaFin && mov.FechaCreacion >= fechaIni))
-                    .FirstOrDefaultAsync();
-        }
 
+        public async Task<List<ReporteDto>> GetReportePorFechas(Guid clienteId, DateTime fechaIni, DateTime fechaFin)
+        {
+            List<ReporteDto> reporte = await (from cliente in _context.Cliente
+                           join cuenta in _context.Cuenta on cliente.Id equals cuenta.IdCliente
+                           join movimiento in _context.Movimiento on cuenta.Id equals movimiento.IdCuenta
+                           where 
+                                cliente.Id == clienteId 
+                                && movimiento.FechaCreacion >= fechaIni
+                                && movimiento.FechaCreacion <= fechaFin 
+                           select new ReporteDto
+                           {
+                               Cliente = cliente.Nombre,
+                               NumeroCuenta = cuenta.NumeroCuenta ?? "",
+                               Tipo = cuenta.TipoCuenta ?? "",
+                               Fecha = movimiento.FechaCreacion,
+                               SaldoInicial = movimiento.Saldo - movimiento.Valor,
+                               SaldoDisponible = movimiento.Saldo,
+                               Movimiento = (movimiento.TipoMovimiento == TipoMovimientos.D.ToString() ? "Débito":"Crédito") +" de "+  movimiento.Valor,
+                               Estado = movimiento.Estado ?? true
+                           }).ToListAsync();
+
+            return reporte;
+        }
 
         public async  Task<List<CuentaReadDto>> GetAllCuentasCliente()
         {
