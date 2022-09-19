@@ -25,9 +25,9 @@ namespace Pichincha.Api.DependencyInjection
         public static void AddDatabase(this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddDbContext<AppDbContext>(opt =>
-                 opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-                x => x.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
+            services.AddDbContext<AppDbContext>(options => options
+                  .EnableSensitiveDataLogging()
+                  .UseNpgsql(configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
         }
     }
 }
