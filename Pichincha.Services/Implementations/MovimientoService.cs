@@ -68,7 +68,7 @@ namespace Pichincha.Services.Implementations
 
         public async Task<StatusDto> AddMovimiento(MovimientoCreateDto movimientoDto)
         {
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.UtcNow;
 
             var cuentaEnBDD = await _cuentaRepository.GetAsync(movimientoDto.IdCuenta);
 
@@ -106,7 +106,7 @@ namespace Pichincha.Services.Implementations
 
         public async Task<StatusDto> UpdateMovimiento(Guid id, MovimientoDto dto)
         {
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.UtcNow;
             var movimiento = await _movimientoRepository.GetAsync(id);
             if (movimiento is null)
                 throw new BadRequestException($"Movimiento con Id = {id} no existe.");
@@ -152,7 +152,7 @@ namespace Pichincha.Services.Implementations
 
             //Actualizamos el saldo en la cuenta
             cuentaEnBDD.Saldo = saldoNuevo;
-            cuentaEnBDD.FechaModificacion = DateTime.Now;
+            cuentaEnBDD.FechaModificacion = DateTime.UtcNow;
 
             await _movimientoRepository.DeleteAsync(movimiento);
             await _movimientoRepository.SaveChangesAsync();

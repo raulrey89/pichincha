@@ -67,7 +67,7 @@ namespace Pichincha.Services.Implementations
 
         public async Task<StatusDto> AddCliente(PersonaCliente dto)
         {
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.UtcNow;
 
             var clienteEntity = new ClienteEntity
             {
@@ -94,7 +94,7 @@ namespace Pichincha.Services.Implementations
 
         public async Task<StatusDto> UpdateCliente(Guid id, PersonaCliente dto)
         {
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.UtcNow;
 
             var cliente = await _clienteRepository.GetAsync(id);
             if (cliente is null)

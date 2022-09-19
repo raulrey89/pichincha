@@ -54,7 +54,7 @@ namespace Pichincha.Services.Implementations
             if (clienteEnBdd is null)
                 throw new BadRequestException($"Cliente con Id = {dto.IdCliente} no existe.");
 
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.UtcNow;
             Guid idCuenta = Guid.NewGuid();
             var cuentaEntity = new CuentaEntity
             {
@@ -91,7 +91,7 @@ namespace Pichincha.Services.Implementations
 
         public async Task<StatusDto> UpdateCuenta(Guid id, CuentaDto dto)
         {
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.UtcNow;
             var cuenta = await _CuentaRepository.GetAsync(id);
             if (cuenta is null)
                 throw new BadRequestException($"Cuenta con Id = {id.ToString()} no existe.");
